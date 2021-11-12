@@ -1,19 +1,43 @@
-- name: Rust Release binary
-  # You may pin to the exact commit or the version.
-  # uses: rust-build/rust-build.action@2536282951df7c29e287db177c8079ed6d196fc6
-  uses: rust-build/rust-build.action@v1.2.1
-  with:
-    # Output target
-    RUSTTARGET: memes
-    # 
-    GITHUB_TOKEN: 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
-    # List of extra files to include in build
-    EXTRA_FILES: # optional
-    # Path to directory containing Cargo.toml (defaults to project root)
-    SRC_DIR: # optional
-    # List of archive types to publish the binaries with, default "zip", supports zip and all tar formats
-    ARCHIVE_TYPES: # optional
-    # Relative path of script to run before building
-    PRE_BUILD: # optional
-    # Relative path of script to run after building
-    POST_BUILD: # optional
+on:
+  release:
+    types: [created]
+
+jobs:
+  release:
+    name: release ${{ matrix.target }}  (with non-required env)
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: x86_64-pc-windows-gnu
+            archive: zip
+          - target: x86_64-unknown-linux-musl
+            archive: tar.gz
+          - target: x86_64-apple-darwin
+            archive: zip
+          - target: wasm32-wasi
+            archive: zip tar.gz
+    steps:
+      - uses: actions/checkout@master
+      - name: Compile and release
+        uses: rust-build/rust-build.action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUSTTARGET: ${{ matrix.target }}
+          SRC_DIR: "."
+          ARCHIVE_TYPES: ${{ matrix.archive }}
+  release_without_not_required:
+    name: release ${{ matrix.target }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        target: [x86_64-unknown-linux-musl]
+    steps:
+      - uses: actions/checkout@master
+      - name: Compile and release
+        uses: rust-build/rust-build.action@master
+        env:
+          GITHUB_TOKEN: ${{ TOKEN.GIT }}
+          RUSTTARGET: ${{ matrix.target }}
