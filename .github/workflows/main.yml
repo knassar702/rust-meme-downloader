@@ -6,7 +6,7 @@
     # Output target
     RUSTTARGET: memes
     # 
-    GITHUB_TOKEN: {{TOKEN.GIT}}
+    GITHUB_TOKEN: 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
     # List of extra files to include in build
     EXTRA_FILES: # optional
     # Path to directory containing Cargo.toml (defaults to project root)
