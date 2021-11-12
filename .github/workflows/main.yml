@@ -1,0 +1,19 @@
+- name: Rust Release binary
+  # You may pin to the exact commit or the version.
+  # uses: rust-build/rust-build.action@2536282951df7c29e287db177c8079ed6d196fc6
+  uses: rust-build/rust-build.action@v1.2.1
+  with:
+    # Output target
+    RUSTTARGET: memes
+    # 
+    GITHUB_TOKEN: {{TOKEN.GIT}}
+    # List of extra files to include in build
+    EXTRA_FILES: # optional
+    # Path to directory containing Cargo.toml (defaults to project root)
+    SRC_DIR: # optional
+    # List of archive types to publish the binaries with, default "zip", supports zip and all tar formats
+    ARCHIVE_TYPES: # optional
+    # Relative path of script to run before building
+    PRE_BUILD: # optional
+    # Relative path of script to run after building
+    POST_BUILD: # optional
